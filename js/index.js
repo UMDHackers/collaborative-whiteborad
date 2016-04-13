@@ -3,9 +3,6 @@ window.onload = function() {
 		var myCanvas = document.getElementById("myCanvas");
 		var ctx = myCanvas.getContext("2d");
 
-    // Fill Window Width and Height
-    myCanvas.width = window.innerWidth;
-		myCanvas.height = window.innerHeight;
 
 		// Set Background Color
     ctx.fillStyle="#fff";
@@ -13,6 +10,9 @@ window.onload = function() {
 
     // Mouse Event Handlers
 	if(myCanvas){
+		// Fill Window Width and Height
+		myCanvas.width = window.innerWidth;
+		myCanvas.height = window.innerHeight;
 		var isDown = false;
 		var canvasX, canvasY;
 		ctx.lineWidth = 5;
