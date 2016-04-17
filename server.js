@@ -15,6 +15,11 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   console.log('a user connected');
   numberOnline = numberOnline + 1;
+
+  socket.on('next_dirs', function(data) {
+    io.emit('next_dirs', data);
+  })
+
   io.emit('user_change', numberOnline);
   socket.on('disconnect', function(){
     numberOnline = numberOnline - 1;
@@ -22,6 +27,7 @@ io.on('connection', function(socket){
     console.log('user disconnected');
   });
 });
+
 
 http.listen(3000, function() {
   console.log('listening on 3000');

@@ -4,7 +4,12 @@
 }
 
 
-#myCanvas {
+#canvas {
 	 cursor: crosshair;
    position: fixed;
+	 border-style: solid;
+	 border-width: thin;
+	 width: 950px;
+	 height: 500px;
+	 text-align: center;
 }
