@@ -13,7 +13,7 @@ ctx.lineWidth = 3;
 $("#canvas").mousedown(function() {
   console.log("start");
   started = true;
-  ctx.beginPath();
+  //ctx.beginPath();
   mouse_x = event.clientX - myCanvas.offsetLeft;
   mouse_y = event.clientY - myCanvas.offsetTop;
   ctx.moveTo(mouse_x, mouse_y);

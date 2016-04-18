@@ -40,7 +40,7 @@
       });
       socket.on('move', function(data){
         ctx.lineTo(data.x_val, data.y_val);
-        ctx.strokeStyle = data.color;
+        ctx.strokeStyle = data.col;
         ctx.stroke();
       });
       socket.on('up', function(data) {
@@ -57,11 +57,11 @@
       $("#canvas").mousedown(function() {
         console.log("start");
         started = true;
-        ctx.beginPath();
+        //ctx.beginPath();
         mouse_x = event.clientX - myCanvas.offsetLeft;
         mouse_y = event.clientY - myCanvas.offsetTop;
         socket.emit('down', {x_val:mouse_x, y_val:mouse_y});
-        ctx.moveTo(mouse_x, mouse_y);
+        //ctx.moveTo(mouse_x, mouse_y);
       });
       $("#canvas").mousemove(function() {
         if(started) {
@@ -69,16 +69,16 @@
           mouse_x = event.clientX - myCanvas.offsetLeft;
           mouse_y = event.clientY - myCanvas.offsetTop;
           socket.emit('move', {x_val:mouse_x, y_val:mouse_y, col:color, canvas:ctx});
-          ctx.lineTo(mouse_x, mouse_y);
-         	ctx.strokeStyle = color;
-      		ctx.stroke();
+          // ctx.lineTo(mouse_x, mouse_y);
+          // 	ctx.strokeStyle = color;
+          // ctx.stroke();
         }
       });
       $("#canvas").mouseup(function() {
         console.log("mouseup");
         socket.emit('up', {x_val:mouse_x, y_val:mouse_y, col:color});
         started = false;
-        ctx.closePath();
+        //ctx.closePath();
       });
 
 
