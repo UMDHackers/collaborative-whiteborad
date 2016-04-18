@@ -11,18 +11,6 @@
     <link rel = "stylesheet" href = "/css/index.css">
   </head>
   <body>
-    <script>
-      var socket = io();
-      socket.on('user_change', function(msg){
-        $('#online').text("Users Online: ");
-        $('#online').append(msg);
-      });
-      socket.on('next_dirs', function(data){
-        ctx.lineTo(data.x_val, data.y_val);
-        ctx.strokeStyle = data.color;
-        ctx.stroke();
-      });
-    </script>
     <h1 style="text-align:center;">Collaborative Whiteborad! - <span style="text-align:center;" id = "online">Users online</span></h1>
     <hr>
     <br>
@@ -35,8 +23,79 @@
       </canvas>
 
     </div>
+    <script>
+      // Get element
+      var myCanvas = document.getElementById("canvas");
+      var ctx = myCanvas.getContext("2d");
+      var started = false, mouse_x = 0, mouse_y = 0;
+      var color = gen_color();
+      var socket = io();
+      socket.on('user_change', function(msg){
+        $('#online').text("Users Online: ");
+        $('#online').append(msg);
+      });
+      socket.on('down', function(data) {
+        ctx.beginPath();
+        ctx.moveTo(data.x_val, data.y_val);
+      });
+      socket.on('move', function(data){
+        ctx.lineTo(data.x_val, data.y_val);
+        ctx.strokeStyle = data.color;
+        ctx.stroke();
+      });
+      socket.on('up', function(data) {
+        ctx.closePath();
+      });
 
-  <script src = "../js/users.js"></script>
+      // Set Background Color
+      ctx.fillStyle="#fff";
+      ctx.fillRect(0,0,myCanvas.width,myCanvas.height);
+      myCanvas.width = 950;
+      myCanvas.height = 500;
+      ctx.lineWidth = 3;
+
+      $("#canvas").mousedown(function() {
+        console.log("start");
+        started = true;
+        ctx.beginPath();
+        mouse_x = event.clientX - myCanvas.offsetLeft;
+        mouse_y = event.clientY - myCanvas.offsetTop;
+        socket.emit('down', {x_val:mouse_x, y_val:mouse_y});
+        ctx.moveTo(mouse_x, mouse_y);
+      });
+      $("#canvas").mousemove(function() {
+        if(started) {
+          console.log("move");
+          mouse_x = event.clientX - myCanvas.offsetLeft;
+          mouse_y = event.clientY - myCanvas.offsetTop;
+          socket.emit('move', {x_val:mouse_x, y_val:mouse_y, col:color, canvas:ctx});
+          ctx.lineTo(mouse_x, mouse_y);
+         	ctx.strokeStyle = color;
+      		ctx.stroke();
+        }
+      });
+      $("#canvas").mouseup(function() {
+        console.log("mouseup");
+        socket.emit('up', {x_val:mouse_x, y_val:mouse_y, col:color});
+        started = false;
+        ctx.closePath();
+      });
+
+
+      function gen_color() {
+        var array = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
+        var i = 0, ret = "#";
+        for(;i < 6; i++) {
+          ret = ret + array[Math.floor((Math.random() * 15) +1)];
+        }
+        console.log("ret " + ret);
+        return ret;
+      }
+
+    </script>
+
+
+  <!-- <script src = "../js/users.js"></script> -->
   </body>
 
 </html>
